@@ -18,13 +18,17 @@ function fetchUrl(url, token) {
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Max-Age', '86400');
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
 
-  const token = process.env.OURA_TOKEN;
+  const token = (req.method === 'POST' ? req.body?.access_token : null)
+    || process.env.OURA_TOKEN;
   if (!token) return res.status(500).json({ error: 'Token no configurado' });
-
   const today = new Date().toISOString().split('T')[0];
   const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
 
