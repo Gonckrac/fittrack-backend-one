@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -16,6 +16,16 @@ export default async function handler(req, res) {
         tokenUrl: 'https://api.ouraring.com/oauth/token',
         clientId: process.env.OURA_CLIENT_ID,
         clientSecret: process.env.OURA_CLIENT_SECRET,
+      },
+      garmin: {
+        tokenUrl: 'https://connectapi.garmin.com/oauth-service/oauth/token',
+        clientId: process.env.GARMIN_CLIENT_ID,
+        clientSecret: process.env.GARMIN_CLIENT_SECRET,
+      },
+      fitbit: {
+        tokenUrl: 'https://api.fitbit.com/oauth2/token',
+        clientId: process.env.FITBIT_CLIENT_ID,
+        clientSecret: process.env.FITBIT_CLIENT_SECRET,
       },
     };
 
@@ -38,7 +48,7 @@ export default async function handler(req, res) {
 
     const data = await response.json();
     return res.status(response.ok ? 200 : 400).json(data);
-  } catch(err) {
+  } catch (err) {
     return res.status(500).json({ error: err.message });
   }
-}
+};
